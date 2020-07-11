@@ -5,7 +5,7 @@ import { TweetsComponent } from './tweets/tweets.component';
 
 
 const routes: Routes = [{ path: 'app-sevilla', component: SevillaComponent }
-                      ,{ path: 'app-tweets', component: TweetsComponent }];
+                      , { path: 'app-tweets', component: TweetsComponent }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -30,7 +30,7 @@ strong {
 }
 
 a {
-	color: #0000FF;
+	color: #666666;
 }
 
 a:hover {
@@ -381,7 +381,7 @@ ul.style4 .first
 	font-size: 1.2;
 	font-weight: 200;
 	font-family: 'Raleway', sans-serif;
-	color: #666666;
+	// color: #666666;
 	border: none;
 }
 
@@ -571,4 +571,8 @@ ul.style4 .first
 	padding: 15px 20px;
 	font-size: 1.3em;
 	font-weight: 600;
+}
+
+.btn-active {
+	color: white;
 }

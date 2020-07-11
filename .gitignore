@@ -4,8 +4,9 @@
 /dist
 /tmp
 /out-tsc
-# Only exists if Bazel was run
-/bazel-out
+/API/bin
+/API/obj
+/API/Migrations
 
 # dependencies
 SPA/node_modules

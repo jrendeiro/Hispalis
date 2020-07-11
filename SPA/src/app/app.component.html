@@ -6,11 +6,14 @@
 		</div>
 		<div id="menu">
 			<ul>
-				<li class="first current_page_item"><a href="#" accesskey="1" title="">Homepage</a></li>
-				<li><a [routerLink]="['/app-tweets']" >Tweets</a></li>
+				<li><a [routerLink]="['/app-sevilla']" routerLinkActive="btn-active" >Home</a></li>
+				<li><a [routerLink]="['/app-tweets']" routerLinkActive="btn-active" >Tweets</a></li>
 			</ul>
 		</div>
 	</div>
+
+	<!--
+
 	<div id="page">
 		<div class="content"> <span>Mauris vulputate dolor </span>
 			<h2>Nulla luctus eleifend purus</h2>
@@ -18,9 +21,6 @@
 			<a href="#" class="button-style button-style-alt">Ipsum feugiat consequat</a> </div>
 	</div>
 	<div id="featured-wrapper">
-		<!-- <div *ngFor="let tweet of tweets" id="box1">
-            {{ }}
-         </div> -->
 		<div id="box2">
 			<h2>Praesent<br />
 				<span> scelerisque scelerisque</span></h2>
@@ -87,5 +87,7 @@
 </div>
 
 <a [routerLink]="['/app-sevilla']">Go to Seville</a> 
+
+!-->
 
 <router-outlet></router-outlet>
