@@ -1,1 +1,3 @@
-<p>tweets works!</p>
+<div *ngFor="let tweet of tweets" style = "color: white">
+ {{ tweet.userName }}  says <u> {{ tweet.text }} </u>  from  {{ tweet.location }}
+</div>
