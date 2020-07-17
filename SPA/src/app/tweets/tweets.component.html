@@ -1,3 +1,29 @@
-<div *ngFor="let tweet of tweets" style = "color: white">
- {{ tweet.userName }}  says <u> {{ tweet.text }} </u>  from  {{ tweet.location }}
+
+<div *ngFor="let tweet of tweets" style = "color: orangered">
+    {{ tweet.userName }}  says <u> {{ tweet.text }} </u>  from  {{ tweet.location }} on {{ tweet.time }}
 </div>
+
+<mat-paginator
+#paginator
+[length]="length"
+[(pageSize)]="pageSize"
+[pageSizeOptions]="[10, 50, 100, 500]"
+(page) = "getTweets()">
+</mat-paginator>
+
+<!-- <mat-paginator
+[length]="length"
+[pageIndex]="pageIndex"
+[pageSizeOptions]="[10, 50, 100, 500]"
+(page) = "getTweets(srchValue.value, $event)">
+(page) = "getTweets(srchValue.value, $event)">
+</mat-paginator> -->
+
+
+<form class="example-form">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <!-- <input #srchValue matInput placeholder="try &quot;narwals&quot;"> -->
+      <input matInput [(ngModel)]="srchTerm" name="srchTerm" (keyup.enter) ="getTweets()" placeholder="try &quot;narwals&quot;">
+    </mat-form-field>
+</form>

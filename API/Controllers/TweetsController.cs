@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using API.Helpers;
+using AutoMapper;
 
 namespace API.Controllers
 {
@@ -20,18 +20,37 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTweet()
+        public IActionResult GetTweets([FromQuery] string srchItem)
         {
+
+
+            // two ways of doing the same thing. just comment one out
+            // -------------------------------------------------------------------------------
+            // int tweetCount = Math.Max(25, Convert.ToInt32(Request.Headers["count"]));
+            int tweetCount = Convert.ToInt32(Request.Headers["count"]);
+            // int tweetCount = Request.TestExtension("count");
+            // -------------------------------------------------------------------------------
+
             try
             {
                 List<Tweet> tweets = _context.Tweets
                     .Where(x => x.Text.Length > 0
-                         && x.UserName.Length > 0)
-                    .OrderByDescending(x => x.TweetId)
+                         && x.UserName.Length > 0
+                         && x.Text.Contains(srchItem))
+                    .OrderByDescending(x => x.Time)
                     .ToList()
                     ;
-                // return Ok(_context.Tweets.Take(50));
-                return Ok(tweets);
+                    
+                Response.AddTweetCount(tweets.Count.ToString());
+
+                var tweetsToReturn = tweets.Take(tweetCount);
+
+
+                // var tweetz = _mapper.Map<IEnumerable<TweetToReturnDto>>(tweets);
+
+
+
+                return Ok(tweetsToReturn);
             }
             catch (Exception Err)
             {

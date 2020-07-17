@@ -8,6 +8,7 @@
 /API/obj
 /API/Migrations
 /API/*.db
+/API/.vs
 
 # dependencies
 SPA/node_modules
