@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/cor
 import { TweetsService } from '../services/tweets.service';
 import { Tweet } from 'models/Tweet';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { PaginationHeader } from 'models/PaginationHeader';
 
 @Component({
   selector: 'app-tweets',
@@ -14,10 +15,10 @@ export class TweetsComponent implements OnInit {
 
   tweets: Tweet[];
 
-
   pageEvent: PageEvent;
-  datasource: null;
-  pageSize: number;
+  paginationHeader: PaginationHeader;
+  // datasource: null;
+  // pageSize: number;
   length: string;
 
   srchTerm: string;
@@ -25,19 +26,22 @@ export class TweetsComponent implements OnInit {
   constructor(private tweetsService: TweetsService) { }
 
   ngOnInit() {
-    // this.getTweets();
-    // this.pageSize = 50;
+    this.srchTerm = '';
+    this.getTweets();
   }
-
 
 // getTweets(srchTrm?: string, event?: PageEvent, isSrchChng?: boolean) {
 getTweets() {
-  // const itemsCount = event.pageSize ? event.pageSize.toString() : null;
-  if (this.srchTerm !== this.tweetsService.srchTerm) {
-    console.log('yep, changed srch term. changing index to 0!');
+  if (this.srchTerm !== this.tweetsService.srchTerm && this.paginator) {
     this.paginator.firstPage(); }
 
-  this.tweetsService.getTweets(this.srchTerm, this.paginator.pageSize)
+  // tslint:disable-next-line:triple-equals
+  // tslint:disable-next-line:triple-equals
+  this.srchTerm = (this.srchTerm == '') ? null : this.srchTerm;
+
+  this.setPaginationHeader();
+
+  this.tweetsService.getTweets(this.srchTerm, this.paginationHeader)
   .subscribe(tweets => {
     this.tweets = tweets;
   }, error => {
@@ -47,7 +51,15 @@ getTweets() {
 
     console.log('here your value: ' + this.srchTerm);
     console.log('here your length: ' + this.length);
-    });
+  });
+}
+
+setPaginationHeader() {
+  this.paginationHeader.pageSize = this.paginator ? this.paginator.pageSize : 50;
+  // tslint:disable-next-line:whitespace
+  this.paginationHeader.firstDate = this.tweets?.[0].time;
+  // tslint:disable-next-line:whitespace
+  this.paginationHeader.lastDate = this.tweets?.[this.tweets.length - 1].time;
 }
 
 }

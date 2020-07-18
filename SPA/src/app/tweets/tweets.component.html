@@ -11,19 +11,10 @@
 (page) = "getTweets()">
 </mat-paginator>
 
-<!-- <mat-paginator
-[length]="length"
-[pageIndex]="pageIndex"
-[pageSizeOptions]="[10, 50, 100, 500]"
-(page) = "getTweets(srchValue.value, $event)">
-(page) = "getTweets(srchValue.value, $event)">
-</mat-paginator> -->
-
 
 <form class="example-form">
     <mat-form-field>
       <mat-label>Search</mat-label>
-      <!-- <input #srchValue matInput placeholder="try &quot;narwals&quot;"> -->
-      <input matInput [(ngModel)]="srchTerm" name="srchTerm" (keyup.enter) ="getTweets()" placeholder="try &quot;narwals&quot;">
+      <input matInput [(ngModel)]="srchTerm" name="srchTerm" (keyup.enter) ="getTweets()" style="background-color: white" placeholder="try &quot;narwals&quot;">
     </mat-form-field>
 </form>

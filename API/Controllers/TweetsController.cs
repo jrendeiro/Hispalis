@@ -20,33 +20,42 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTweets([FromQuery] string srchItem)
+        public IActionResult GetTweets([FromQuery] string srchItem = null)
         {
 
 
             // two ways of doing the same thing. just comment one out
             // -------------------------------------------------------------------------------
-            // int tweetCount = Math.Max(25, Convert.ToInt32(Request.Headers["count"]));
             int tweetCount = Convert.ToInt32(Request.Headers["count"]);
             // int tweetCount = Request.TestExtension("count");
             // -------------------------------------------------------------------------------
 
+            List<Tweet> tweets;
+
             try
             {
-                List<Tweet> tweets = _context.Tweets
-                    .Where(x => x.Text.Length > 0
-                         && x.UserName.Length > 0
-                         && x.Text.Contains(srchItem))
-                    .OrderByDescending(x => x.Time)
-                    .ToList()
-                    ;
+                if (srchItem != null) {
+                    tweets = _context.Tweets
+                        .Where(x => x.Text.Contains(srchItem)
+                            && x.Text.Length > 0
+                            && x.UserName.Length > 0)
+                        .OrderByDescending(x => x.Time)
+                        .ToList();
+                }
+                else {
+                    tweets = _context.Tweets
+                        .Where(x => x.Text.Length > 0
+                            && x.UserName.Length > 0)
+                        .OrderByDescending(x => x.Time)
+                        .ToList();
+                }
                     
                 Response.AddTweetCount(tweets.Count.ToString());
 
-                var tweetsToReturn = tweets.Take(tweetCount);
+                var tweetIndex = 3456;
 
-
-                // var tweetz = _mapper.Map<IEnumerable<TweetToReturnDto>>(tweets);
+                // var tweetsToReturn = tweets.Take(tweetCount);
+                var tweetsToReturn = tweets.TakeWhile(x => x.TweetId > tweetIndex);
 
 
 

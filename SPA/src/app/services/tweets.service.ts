@@ -5,6 +5,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { Tweet } from '../../../models/Tweet';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { PaginationHeader } from 'models/PaginationHeader';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class TweetsService {
   constructor(private http: HttpClient) { }
 
 
-  getTweets(srchItem: string, pageSize: number) {
+  getTweets(srchItem: string, paginationHeader: PaginationHeader) {
 
     let params = new HttpParams();
     let headers: HttpHeaders = new HttpHeaders();
@@ -27,7 +28,7 @@ export class TweetsService {
     this.srchTerm = srchItem;
 
     params = params.append('srchItem', srchItem);
-    headers = headers.append('count', pageSize.toString());
+    headers = headers.append('count', paginationHeader.pageSize.toString());
 
     return this.http.get<Tweet[]>(this.baseUrl + 'tweets', { observe: 'response', headers, params})
       .pipe(
