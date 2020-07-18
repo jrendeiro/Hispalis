@@ -11,7 +11,7 @@ import { PaginationHeader } from 'models/PaginationHeader';
 })
 export class TweetsComponent implements OnInit {
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator ;
+  @ViewChild(MatPaginator) paginator: MatPaginator ;
 
   tweets: Tweet[];
 
