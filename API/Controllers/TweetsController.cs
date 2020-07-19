@@ -5,7 +5,7 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using API.Helpers;
-using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -23,6 +23,8 @@ namespace API.Controllers
         public IActionResult GetTweets([FromQuery] string srchItem = null)
         {
 
+            RequestHeaderObject currentHeaders = HeaderHandler.populateHeaderObject(Request);
+            var requestType = HeaderHandler.determineRequestType(currentHeaders);
 
             // two ways of doing the same thing. just comment one out
             // -------------------------------------------------------------------------------
@@ -30,33 +32,36 @@ namespace API.Controllers
             // int tweetCount = Request.TestExtension("count");
             // -------------------------------------------------------------------------------
 
-            List<Tweet> tweets;
+            // List<Tweet> tweets;
+            var tweets =  TweetQueryBuilder.buildQuery(requestType, _context, currentHeaders, srchItem);
+            // IQueryable<Tweet> tweets;
 
             try
             {
-                if (srchItem != null) {
-                    tweets = _context.Tweets
-                        .Where(x => x.Text.Contains(srchItem)
-                            && x.Text.Length > 0
-                            && x.UserName.Length > 0)
-                        .OrderByDescending(x => x.Time)
-                        .ToList();
-                }
-                else {
-                    tweets = _context.Tweets
-                        .Where(x => x.Text.Length > 0
-                            && x.UserName.Length > 0)
-                        .OrderByDescending(x => x.Time)
-                        .ToList();
-                }
+            //     if (srchItem == null) {
+            //         tweets = _context.Tweets
+            //             .Where(x => x.Text.Length > 0
+            //                 && x.UserName.Length > 0)
+            //             .OrderByDescending(x => x.Time)
+            //             .Take(45)
+            //             .ToList();
+            //     }
+            //     else {
+            //         tweets = _context.Tweets
+            //             .Where(x => x.Text.Contains(srchItem)
+            //                 && x.Text.Length > 0
+            //                 && x.UserName.Length > 0)
+            //             .OrderByDescending(x => x.Time)
+            //             .ToList();
+            //     }
                     
-                Response.AddTweetCount(tweets.Count.ToString());
+                List<Tweet> tweetsList = tweets.ToList();
 
-                var tweetIndex = 3456;
+                Response.AddTweetCount(tweetsList.Count.ToString());
 
-                // var tweetsToReturn = tweets.Take(tweetCount);
-                var tweetsToReturn = tweets.TakeWhile(x => x.TweetId > tweetIndex);
+                // DateTime date = Convert.ToDateTime(Request.Headers["date"]);
 
+                var tweetsToReturn = tweets.Take(currentHeaders.pageSize);
 
 
                 return Ok(tweetsToReturn);

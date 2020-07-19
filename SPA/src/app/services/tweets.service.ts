@@ -6,6 +6,7 @@ import { Tweet } from '../../../models/Tweet';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PaginationHeader } from 'models/PaginationHeader';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root'
@@ -20,22 +21,32 @@ export class TweetsService {
   constructor(private http: HttpClient) { }
 
 
-  getTweets(srchItem: string, paginationHeader: PaginationHeader) {
+  getTweets(srchTerm: string, paginationHeader: PaginationHeader) {
 
     let params = new HttpParams();
     let headers: HttpHeaders = new HttpHeaders();
 
-    this.srchTerm = srchItem;
+    this.srchTerm = srchTerm;
 
-    params = params.append('srchItem', srchItem);
+    params = params.append('srchItem', srchTerm);
     headers = headers.append('count', paginationHeader.pageSize.toString());
 
+    if (paginationHeader.tweetId) {
+      headers = headers.append('tweetDate', paginationHeader?.date);
+      headers = headers.append('tweetId', paginationHeader?.tweetId.toString());
+    }
+
+    console.log('service thinks it has operator of: ' + paginationHeader.tweetOperator);
+
+    headers = headers.append('operator', paginationHeader?.tweetOperator);
+
     return this.http.get<Tweet[]>(this.baseUrl + 'tweets', { observe: 'response', headers, params})
-      .pipe(
-        map(response => {
-          this.tweetList = response.body;
-          this.totalRecords = response.headers.get('ResultCount');
-          return this.tweetList;
+    .pipe(
+      map(response => {
+        this.tweetList = response.body;
+        this.totalRecords = response.headers.get('ResultCount');
+        console.log(`tweets service made it this far!`);
+        return this.tweetList;
         })
       );
   }

@@ -6,15 +6,19 @@
 <mat-paginator
 #paginator
 [length]="length"
-[(pageSize)]="pageSize"
+[(pageSize)]="paginationHeader.pageSize"
 [pageSizeOptions]="[10, 50, 100, 500]"
-(page) = "getTweets()">
+(page) = "getTweets($event)">
 </mat-paginator>
+
+<div>
+  page index is {{ pageIndex }} and previous page index is {{ previousPageIndex }}
+</div>
 
 
 <form class="example-form">
     <mat-form-field>
       <mat-label>Search</mat-label>
-      <input matInput [(ngModel)]="srchTerm" name="srchTerm" (keyup.enter) ="getTweets()" style="background-color: white" placeholder="try &quot;narwals&quot;">
+      <input matInput [(ngModel)]="srchTerm" name="srchTerm" (keyup.enter) ="getTweets(null, 'enter')" style="background-color: white" placeholder="try &quot;narwals&quot;">
     </mat-form-field>
 </form>

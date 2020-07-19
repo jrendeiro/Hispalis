@@ -16,12 +16,22 @@ export class TweetsComponent implements OnInit {
   tweets: Tweet[];
 
   pageEvent: PageEvent;
-  paginationHeader: PaginationHeader;
+
+  paginationHeader: PaginationHeader = {
+    tweetId: null,
+    date: null,
+    tweetOperator: null,
+    pageSize: null
+  };
+
   // datasource: null;
-  // pageSize: number;
+  pageSize: number;
   length: string;
 
   srchTerm: string;
+
+  pageIndex: number;
+  previousPageIndex: number;
 
   constructor(private tweetsService: TweetsService) { }
 
@@ -31,15 +41,20 @@ export class TweetsComponent implements OnInit {
   }
 
 // getTweets(srchTrm?: string, event?: PageEvent, isSrchChng?: boolean) {
-getTweets() {
+getTweets(event?: PageEvent, enterKey: string = 'notEnter') {
   if (this.srchTerm !== this.tweetsService.srchTerm && this.paginator) {
     this.paginator.firstPage(); }
 
-  // tslint:disable-next-line:triple-equals
-  // tslint:disable-next-line:triple-equals
-  this.srchTerm = (this.srchTerm == '') ? null : this.srchTerm;
+  this.pageIndex = event?.pageIndex;
+  this.previousPageIndex = event?.previousPageIndex;
 
-  this.setPaginationHeader();
+  // tslint:disable-next-line:triple-equals
+  // tslint:disable-next-line:triple-equals
+  // this.srchTerm = (this.srchTerm == '') ? null : this.srchTerm;
+
+  // tslint:disable-next-line:whitespace
+  this.setPaginationHeader(event, enterKey);
+
 
   this.tweetsService.getTweets(this.srchTerm, this.paginationHeader)
   .subscribe(tweets => {
@@ -54,12 +69,40 @@ getTweets() {
   });
 }
 
-setPaginationHeader() {
+setPaginationHeader(event?: PageEvent, enterKey?: string) {
+
+  if (event?.pageIndex > event?.previousPageIndex) {
+    this.paginationHeader.tweetId = this.tweets[this.tweets.length - 1].tweetId;
+    this.paginationHeader.date = this.tweets?.[this.tweets.length - 1].time;
+    this.paginationHeader.tweetOperator = '<';
+  }
+
+  if (event?.pageIndex < event?.previousPageIndex) {
+    this.paginationHeader.tweetId = this.tweets[0].tweetId;
+    this.paginationHeader.date = this.tweets?.[0].time;
+    this.paginationHeader.tweetOperator = '>';
+  }
+
+  if (this.pageSize !== event?.pageSize) {
+    this.paginationHeader.tweetId = this.tweets[0].tweetId;
+    this.paginationHeader.date = this.tweets?.[0].time;
+    this.paginationHeader.tweetOperator = 'size';
+    this.pageSize = event?.pageSize;
+  }
+
+  if (enterKey === 'enter') {
+    this.paginationHeader.tweetOperator = 'search';
+  }
+
   this.paginationHeader.pageSize = this.paginator ? this.paginator.pageSize : 50;
   // tslint:disable-next-line:whitespace
-  this.paginationHeader.firstDate = this.tweets?.[0].time;
-  // tslint:disable-next-line:whitespace
-  this.paginationHeader.lastDate = this.tweets?.[this.tweets.length - 1].time;
+
+  console.log(`ok, here's how i made your header:`);
+  console.log(`id: ` + this.paginationHeader.tweetId);
+  console.log(`date: ` + this.paginationHeader.date);
+  console.log(`operator: ` + this.paginationHeader.tweetOperator);
+  console.log(`pageSize: ` + this.paginationHeader.pageSize);
 }
 
 }
+
