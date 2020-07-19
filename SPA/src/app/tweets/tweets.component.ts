@@ -42,21 +42,23 @@ export class TweetsComponent implements OnInit {
 
 // getTweets(srchTrm?: string, event?: PageEvent, isSrchChng?: boolean) {
 getTweets(event?: PageEvent, enterKey: string = 'notEnter') {
-  if (this.srchTerm !== this.tweetsService.srchTerm && this.paginator) {
+  // if (this.srchTerm !== this.tweetsService.srchTerm && this.paginator) {
+    console.log('my enter key is: ' + enterKey);
+    if (enterKey === 'enter' && this.paginator) {
     this.paginator.firstPage(); }
 
-  this.pageIndex = event?.pageIndex;
-  this.previousPageIndex = event?.previousPageIndex;
+    this.pageIndex = event?.pageIndex;
+    this.previousPageIndex = event?.previousPageIndex;
 
   // tslint:disable-next-line:triple-equals
   // tslint:disable-next-line:triple-equals
   // this.srchTerm = (this.srchTerm == '') ? null : this.srchTerm;
 
   // tslint:disable-next-line:whitespace
-  this.setPaginationHeader(event, enterKey);
+    this.setPaginationHeader(event, enterKey);
 
 
-  this.tweetsService.getTweets(this.srchTerm, this.paginationHeader)
+    this.tweetsService.getTweets(this.srchTerm, this.paginationHeader)
   .subscribe(tweets => {
     this.tweets = tweets;
   }, error => {

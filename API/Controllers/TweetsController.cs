@@ -5,7 +5,6 @@ using API.Data;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using API.Helpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {

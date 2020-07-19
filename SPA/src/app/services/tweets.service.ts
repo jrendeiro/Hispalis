@@ -29,6 +29,7 @@ export class TweetsService {
     this.srchTerm = srchTerm;
 
     params = params.append('srchItem', srchTerm);
+
     headers = headers.append('count', paginationHeader.pageSize.toString());
 
     if (paginationHeader.tweetId) {
@@ -36,9 +37,16 @@ export class TweetsService {
       headers = headers.append('tweetId', paginationHeader?.tweetId.toString());
     }
 
-    console.log('service thinks it has operator of: ' + paginationHeader.tweetOperator);
+    if (paginationHeader.tweetOperator) {
+      headers = headers.append('operator', paginationHeader?.tweetOperator);
+    }
 
-    headers = headers.append('operator', paginationHeader?.tweetOperator);
+    console.log('headers look like: ');
+    console.log('headers object exists? ' + headers.keys());
+    console.log('count : ' + headers.get('count'));
+    console.log('date : ' + headers.get('tweetDate'));
+    console.log('id : ' + headers.get('tweetId'));
+    console.log('operator : ' + headers.get('operator'));
 
     return this.http.get<Tweet[]>(this.baseUrl + 'tweets', { observe: 'response', headers, params})
     .pipe(
