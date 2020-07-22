@@ -32,35 +32,35 @@ namespace API.Controllers
             // -------------------------------------------------------------------------------
 
             // List<Tweet> tweets;
-            var tweets =  TweetQueryBuilder.buildQuery(requestType, _context, currentHeaders, srchItem);
+            var tweets =  TweetQueryBuilder.triageRequestTypes(requestType, _context, currentHeaders, srchItem);
             // IQueryable<Tweet> tweets;
 
             try
             {
-            //     if (srchItem == null) {
-            //         tweets = _context.Tweets
-            //             .Where(x => x.Text.Length > 0
-            //                 && x.UserName.Length > 0)
-            //             .OrderByDescending(x => x.Time)
-            //             .Take(45)
-            //             .ToList();
-            //     }
-            //     else {
-            //         tweets = _context.Tweets
-            //             .Where(x => x.Text.Contains(srchItem)
-            //                 && x.Text.Length > 0
-            //                 && x.UserName.Length > 0)
-            //             .OrderByDescending(x => x.Time)
-            //             .ToList();
-            //     }
-                    
+                // List<Tweet> tweetsList = tweets.ToList().OrderByDescending(x => x.Time);
                 List<Tweet> tweetsList = tweets.ToList();
+                Response.AddTweetCount(tweetsList.Count, srchItem);
+                tweetsList = tweetsList.OrderByDescending(x => x.Time).ToList();
 
-                Response.AddTweetCount(tweetsList.Count.ToString());
+                // Response.AddTweetCount(_context, srchItem);
 
-                // DateTime date = Convert.ToDateTime(Request.Headers["date"]);
+                if (requestType == RequestTypes.Size)
+                {
+                    tweetsList = tweetsList.Skip(tweetsList.FindIndex(x => x.TweetId.ToString() == currentHeaders.tweetId)).ToList();
+                }
 
-                var tweetsToReturn = tweets.Take(currentHeaders.pageSize);
+                if (requestType == RequestTypes.Prev)
+                {
+                    tweetsList = tweetsList.Skip(tweetsList.FindIndex(x => x.TweetId.ToString() == currentHeaders.tweetId) - currentHeaders.pageSize).ToList();
+                }
+
+                if (requestType == RequestTypes.Next)
+                {
+                    tweetsList = tweetsList.Skip(tweetsList.FindIndex(x => x.TweetId.ToString() == currentHeaders.tweetId) + 1).ToList();
+                }
+
+                // var tweetsToReturn = tweets.Take(currentHeaders.pageSize);
+                var tweetsToReturn = tweetsList.Take(currentHeaders.pageSize);
 
 
                 return Ok(tweetsToReturn);

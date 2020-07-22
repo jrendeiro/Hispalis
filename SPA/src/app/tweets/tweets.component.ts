@@ -73,38 +73,61 @@ getTweets(event?: PageEvent, enterKey: string = 'notEnter') {
 
 setPaginationHeader(event?: PageEvent, enterKey?: string) {
 
-  if (event?.pageIndex > event?.previousPageIndex) {
-    this.paginationHeader.tweetId = this.tweets[this.tweets.length - 1].tweetId;
-    this.paginationHeader.date = this.tweets?.[this.tweets.length - 1].time;
-    this.paginationHeader.tweetOperator = '<';
+  this.paginationHeader.tweetOperator = '';
+
+  console.log('here your index and prev index: ' + event?.pageIndex + '  ' + event?.previousPageIndex);
+
+  if (event) {
+  console.log('welp, I knew I had an event');
+  while (this.paginationHeader.tweetOperator === '') {
+    console.log('entered the if event block');
+    if (event?.pageIndex > event?.previousPageIndex && this.pageSize === event?.pageSize) {
+      console.log('i thought it was a next page');
+      this.paginationHeader.tweetId = this.tweets[this.tweets.length - 1].tweetId;
+      this.paginationHeader.date = this.tweets?.[this.tweets.length - 1].time;
+      this.paginationHeader.tweetOperator = '<';
+      console.log('operator has now been set to: ' + this.paginationHeader.tweetOperator);
+      break;
+    }
+
+    if (event?.pageIndex < event?.previousPageIndex && this.pageSize === event?.pageSize) {
+      console.log('i thought it was a prev page');
+      this.paginationHeader.tweetId = this.tweets[0].tweetId;
+      this.paginationHeader.date = this.tweets?.[0].time;
+      this.paginationHeader.tweetOperator = '>';
+      break;
+    }
+
+    console.log('i thought  page sizes were: ' + this.pageSize + '  and  ' + event?.pageSize);
+    if (this.pageSize !== event?.pageSize) {
+      console.log('i thought it was a  page resize');
+      this.paginationHeader.tweetId = this.tweets[0].tweetId;
+      this.paginationHeader.date = this.tweets?.[0].time;
+      this.paginationHeader.tweetOperator = 'size';
+      this.pageSize = event?.pageSize;
+      break;
   }
 
-  if (event?.pageIndex < event?.previousPageIndex) {
-    this.paginationHeader.tweetId = this.tweets[0].tweetId;
-    this.paginationHeader.date = this.tweets?.[0].time;
-    this.paginationHeader.tweetOperator = '>';
-  }
+}
 
-  if (this.pageSize !== event?.pageSize) {
-    this.paginationHeader.tweetId = this.tweets[0].tweetId;
-    this.paginationHeader.date = this.tweets?.[0].time;
-    this.paginationHeader.tweetOperator = 'size';
-    this.pageSize = event?.pageSize;
-  }
+}
 
+  console.log('i think my enter key right before enter is: ' + enterKey);
   if (enterKey === 'enter') {
-    this.paginationHeader.tweetOperator = 'search';
-  }
+  console.log('adding enter header now');
+  this.paginationHeader.tweetOperator = 'search';
+}
 
+
+  console.log('yeah, there was no event and I know it');
   this.paginationHeader.pageSize = this.paginator ? this.paginator.pageSize : 50;
   // tslint:disable-next-line:whitespace
 
-  console.log(`ok, here's how i made your header:`);
-  console.log(`id: ` + this.paginationHeader.tweetId);
-  console.log(`date: ` + this.paginationHeader.date);
-  console.log(`operator: ` + this.paginationHeader.tweetOperator);
-  console.log(`pageSize: ` + this.paginationHeader.pageSize);
+  // console.log(`ok, here's how i made your header:`);
+  // console.log(`id: ` + this.paginationHeader.tweetId);
+  // console.log(`date: ` + this.paginationHeader.date);
+  // console.log(`operator: ` + this.paginationHeader.tweetOperator);
+  // console.log(`pageSize: ` + this.paginationHeader.pageSize);
 }
 
 }
-

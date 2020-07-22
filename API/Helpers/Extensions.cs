@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using API.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 // using Newtonsoft.Json;
@@ -22,12 +23,21 @@ namespace API.Helpers
             return Convert.ToInt32(value);
         }        
 
-        public static void AddTweetCount(this HttpResponse response, string tweetCount)
+        // public static void AddTweetCount(this HttpResponse response, DataContext context, string srchItem)
+        public static void AddTweetCount(this HttpResponse response, int tweetCount, string srchItem)
         {
-            // var camelCaseFormatter = new JsonSerializerSettings();
-            // camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver(); 
+
+        //    var tweetCount = context.Tweets.Where(x => x.Text.Length > 0
+        //                             && x.UserName.Length > 0);
+
+            // if (srchItem != null)
+            // {
+            //     tweetCount = tweetCount.Where(x => x.Text.Contains(srchItem));
+            // }
+
+
             response.Headers.Add("Access-Control-Expose-Headers", "ResultCount");           
-            response.Headers.Add("ResultCount", tweetCount);
+            response.Headers.Add("ResultCount", tweetCount.ToString());
         }
     }
 }
